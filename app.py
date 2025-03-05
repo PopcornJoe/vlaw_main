@@ -8,6 +8,9 @@ from src.utils import save_uploaded_file, cleanup_temp_files
 import pyodbc  # Updated: using pyodbc for SQL Server
 from datetime import datetime
 
+import pymssql
+
+
 def clean_numeric(value):
     """Convert string numbers with commas into proper float values."""
     if value:
@@ -81,14 +84,12 @@ def legal_document_processor():
                 submit_button = st.form_submit_button("Update Data and Generate Documents")
             
             if submit_button:
-                connection_string = (
-                    f'DRIVER={{{st.secrets["database"]["driver"]}}};'
-                    f'SERVER={st.secrets["database"]["server"]};'
-                    f'DATABASE={st.secrets["database"]["database"]};'
-                    f'UID={st.secrets["database"]["user"]};'
-                    f'PWD={st.secrets["database"]["password"]}'
+                conn = pymssql.connect(
+                    server=st.secrets["database"]["server"],
+                    user=st.secrets["database"]["user"],
+                    password=st.secrets["database"]["password"],
+                    database=st.secrets["database"]["database"]
                 )
-                conn = pyodbc.connect(connection_string)
                 cur = conn.cursor()
                 
                 # Update extracted_data with values from form_data
