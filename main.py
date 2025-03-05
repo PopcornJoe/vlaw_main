@@ -16,7 +16,7 @@ import pdf_convert
 import search_and_gen
 import pdf_merge
 
-logo = Image.open(r'C:\Users\StevenLazarus\Desktop\vanhulsteyns-main\Van-Hulsteyns-Logo-Large.png')
+logo = Image.open('Van-Hulsteyns-Logo-Large.png')
 
 def main():
 
