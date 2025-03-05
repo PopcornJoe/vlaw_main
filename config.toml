@@ -1,0 +1,6 @@
+[theme]
+base = "light"  # This sets the overall theme to light
+primaryColor = "#ffffff"          # Primary elements (e.g., buttons) will use white
+backgroundColor = "#ffffff"       # App background will be white
+secondaryBackgroundColor = "#f0f2f6"  # A slightly off-white color for contrast (e.g., sidebar)
+textColor = "#000000"             # Text will be black for readability

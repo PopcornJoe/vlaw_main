@@ -1,0 +1,13 @@
+<<matter_name>>
+<<debtor_1>>
+<<debtor_2>>
+<<address>>
+<<email>>
+<<title>>
+<<account_number>>
+<<balance_amount>>:
+<<instalment_amount>>
+<<arrears_amount>>
+
+<<date>>
+<<property_description>>

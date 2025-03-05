@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+.env
+.venv/
+data/sample_pdfs/*
+data/sample_templates/*
