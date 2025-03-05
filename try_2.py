@@ -13,22 +13,15 @@ import search
 import database_update
 import ocrmypdf
 import tempfile
-import pyodbc  # Updated: using pyodbc for SQL Server
+import pymssql
 
 def get_connection():
-    """
-    Establish a connection to the Microsoft SQL Server database.
-    Connection details are securely stored in streamlit secrets.
-    """
-    connection_string = (
-        f'DRIVER={{{st.secrets["database"]["driver"]}}};'
-        f'SERVER={st.secrets["database"]["server"]};'
-        f'DATABASE={st.secrets["database"]["database"]};'
-        f'UID={st.secrets["database"]["user"]};'
-        f'PWD={st.secrets["database"]["password"]}'
+    return pymssql.connect(
+        server=st.secrets["database"]["host"],
+        user=st.secrets["database"]["user"],
+        password=st.secrets["database"]["password"],
+        database=st.secrets["database"]["database"]
     )
-    return pyodbc.connect(connection_string)
-
 def convert_date(date_str):
     """
     Convert a date string from dd/mm/yyyy to yyyy-mm-dd format.
