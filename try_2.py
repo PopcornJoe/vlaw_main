@@ -13,10 +13,10 @@ import search
 import database_update
 import ocrmypdf
 import tempfile
-import pymssql
+import pytds
 
 def get_connection():
-    return pymssql.connect(
+    return pytds.connect(
         server=st.secrets["database"]["host"],
         user=st.secrets["database"]["user"],
         password=st.secrets["database"]["password"],
