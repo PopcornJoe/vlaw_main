@@ -9,7 +9,6 @@ import io
 from src.pdf_processor import extract_text_from_pdf, extract_data_from_text
 from src.word_processor import process_templates, TEMPLATES
 from src.utils import save_uploaded_file, cleanup_temp_files
-import psycopg2
 from datetime import datetime
 import app
 import try_2
