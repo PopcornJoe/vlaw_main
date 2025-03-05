@@ -3,10 +3,10 @@ import pandas as pd
 from docx import Document
 import datetime
 import os
-import pymssql
+import pytds
 
 def get_connection():
-    return pymssql.connect(
+    return pytds.connect(
         server=st.secrets["database"]["host"],
         user=st.secrets["database"]["user"],
         password=st.secrets["database"]["password"],
