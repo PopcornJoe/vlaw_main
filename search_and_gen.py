@@ -3,21 +3,15 @@ import pandas as pd
 from docx import Document
 import datetime
 import os
-import pyodbc
+import pymssql
 
-# ----------------------
-# Database Functions
-# ----------------------
 def get_connection():
-    """Establish a connection to the PostgreSQL database."""
-    connection_string = (
-        f'DRIVER={{{st.secrets["database"]["driver"]}}};'
-        f'SERVER={st.secrets["database"]["server"]};'
-        f'DATABASE={st.secrets["database"]["database"]};'
-        f'UID={st.secrets["database"]["user"]};'
-        f'PWD={st.secrets["database"]["password"]}'
+    return pymssql.connect(
+        server=st.secrets["database"]["host"],
+        user=st.secrets["database"]["user"],
+        password=st.secrets["database"]["password"],
+        database=st.secrets["database"]["database"]
     )
-    return pyodbc.connect(connection_string)
 
 def flatten_row(row, expected_length):
     """
