@@ -8,7 +8,7 @@ from src.utils import save_uploaded_file, cleanup_temp_files
 import pyodbc  # Updated: using pyodbc for SQL Server
 from datetime import datetime
 
-import pymssql
+import pytds
 
 
 def clean_numeric(value):
@@ -84,11 +84,11 @@ def legal_document_processor():
                 submit_button = st.form_submit_button("Update Data and Generate Documents")
             
             if submit_button:
-                conn = pymssql.connect(
+                conn = pytds.connect(
                     server=st.secrets["database"]["server"],
+                    database=st.secrets["database"]["database"],
                     user=st.secrets["database"]["user"],
-                    password=st.secrets["database"]["password"],
-                    database=st.secrets["database"]["database"]
+                    password=st.secrets["database"]["password"]
                 )
                 cur = conn.cursor()
                 
