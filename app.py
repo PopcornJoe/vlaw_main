@@ -86,6 +86,7 @@ def legal_document_processor():
                 connection_string = (
                     "DRIVER={FreeTDS};"
                     "SERVER=" + st.secrets["database"]["server"] + ";"
+                    "PORT=1433;"
                     "DATABASE=" + st.secrets["database"]["database"] + ";"
                     "UID=" + st.secrets["database"]["user"] + ";"
                     "PWD=" + st.secrets["database"]["password"] + ";"
