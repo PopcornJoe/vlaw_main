@@ -13,7 +13,7 @@ def get_connection():
         "UID=" + st.secrets["database"]["user"] + ";"
         "PWD=" + st.secrets["database"]["password"] + ";"
         "Connection Timeout=60;"
-        "Encrypt=yes;TrustServerCertificate=yes;"
+        "Encrypt=no;TrustServerCertificate=yes;"
         
     )
     return pyodbc.connect(connection_string)
