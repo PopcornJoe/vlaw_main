@@ -12,7 +12,7 @@ def get_connection():
         "DATABASE=" + st.secrets["database"]["database"] + ";"
         "UID=" + st.secrets["database"]["user"] + ";"
         "PWD=" + st.secrets["database"]["password"] + ";"
-        "Encrypt=yes;TrustServerCertificate=yes;"
+        "Encrypt=no;"
         "TDS_Version=8.0;"
         
     )
