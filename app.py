@@ -8,7 +8,6 @@ from src.utils import save_uploaded_file, cleanup_temp_files
 import pyodbc  # Updated: using pyodbc for SQL Server
 from datetime import datetime
 
-import pytds
 
 
 def clean_numeric(value):
@@ -84,13 +83,20 @@ def legal_document_processor():
                 submit_button = st.form_submit_button("Update Data and Generate Documents")
             
             if submit_button:
-                conn = pytds.connect(
-                    server=st.secrets["database"]["server"],
-                    database=st.secrets["database"]["database"],
-                    user=st.secrets["database"]["user"],
-                    password=st.secrets["database"]["password"]
+                connection_string = (
+                    "DRIVER={FreeTDS};"
+                    "SERVER=" + st.secrets["database"]["server"] + ";"
+                    "DATABASE=" + st.secrets["database"]["database"] + ";"
+                    "UID=" + st.secrets["database"]["user"] + ";"
+                    "PWD=" + st.secrets["database"]["password"] + ";"
+                    "TDS_Version=8.0;"
                 )
-                cur = conn.cursor()
+                try:
+                    conn = pyodbc.connect(connection_string)
+                    cur = conn.cursor()
+                    st.success("Connected successfully!")
+                except Exception as e:
+                    st.error(f"Error connecting: {e}")
                 
                 # Update extracted_data with values from form_data
                 for key, value in form_data.items():
