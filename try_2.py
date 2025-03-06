@@ -17,13 +17,12 @@ import pyodbc
 
 def get_connection():
        connection_string = (
-            "DRIVER={FreeTDS};"
-            "SERVER=" + st.secrets["database"]["server"] + ";"
-            "PORT=1433;"
-            "DATABASE=" + st.secrets["database"]["database"] + ";"
-            "UID=" + st.secrets["database"]["user"] + ";"
-            "PWD=" + st.secrets["database"]["password"] + ";"
-            "TDS_Version=8.0;"
+        "DRIVER={" + st.secrets["database"]["driver"] + "};"
+        "SERVER=" + st.secrets["database"]["server"] + ";"
+        "DATABASE=" + st.secrets["database"]["database"] + ";"
+        "UID=" + st.secrets["database"]["user"] + ";"
+        "PWD=" + st.secrets["database"]["password"] + ";"
+        "TDS_Version=8.0;"
         )
     return pyodbc.connect(connection_string)
 def convert_date(date_str):
