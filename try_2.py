@@ -24,7 +24,7 @@ def get_connection():
         "PWD=" + st.secrets["database"]["password"] + ";"
         "TDS_Version=8.0;"
         )
-    return pyodbc.connect(connection_string)
+       return pyodbc.connect(connection_string)
 def convert_date(date_str):
     """
     Convert a date string from dd/mm/yyyy to yyyy-mm-dd format.
