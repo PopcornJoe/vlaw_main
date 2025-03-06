@@ -13,15 +13,19 @@ import search
 import database_update
 import ocrmypdf
 import tempfile
-import pytds
+import pyodbc
 
 def get_connection():
-    return pytds.connect(
-        server=st.secrets["database"]["host"],
-        user=st.secrets["database"]["user"],
-        password=st.secrets["database"]["password"],
-        database=st.secrets["database"]["database"]
+    connection_string = (
+        "DRIVER={FreeTDS};"
+        "SERVER=" + st.secrets["database"]["host"] + ";"
+        "PORT=1433;"
+        "DATABASE=" + st.secrets["database"]["database"] + ";"
+        "UID=" + st.secrets["database"]["user"] + ";"
+        "PWD=" + st.secrets["database"]["password"] + ";"
+        "TDS_Version=8.0;"
     )
+    return pyodbc.connect(connection_string)
 def convert_date(date_str):
     """
     Convert a date string from dd/mm/yyyy to yyyy-mm-dd format.
