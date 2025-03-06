@@ -13,6 +13,7 @@ def get_connection():
         "UID=" + st.secrets["database"]["user"] + ";"
         "PWD=" + st.secrets["database"]["password"] + ";"
         "Connection Timeout=30;"
+        "Encrypt=yes;TrustServerCertificate=yes;"
         "TDS_Version=8.0;"
         
     )
