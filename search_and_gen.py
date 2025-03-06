@@ -7,7 +7,7 @@ import pyodbc
 
 def get_connection():
     connection_string = (
-        "DRIVER={ODBC Driver 18 for SQL Server};"
+        "DRIVER={ODBC Driver 17 for SQL Server};"
         "DRIVER={" + st.secrets["database"]["driver"] + "};"
         "SERVER=" + st.secrets["database"]["server"] + ";"
         "DATABASE=" + st.secrets["database"]["database"] + ";"
