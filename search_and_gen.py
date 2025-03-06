@@ -12,7 +12,9 @@ def get_connection():
         "DATABASE=" + st.secrets["database"]["database"] + ";"
         "UID=" + st.secrets["database"]["user"] + ";"
         "PWD=" + st.secrets["database"]["password"] + ";"
+        "Encrypt=yes;TrustServerCertificate=yes;"
         "TDS_Version=8.0;"
+        
     )
     return pyodbc.connect(connection_string)
 
