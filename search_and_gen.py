@@ -7,7 +7,6 @@ import pyodbc
 
 def get_connection():
     connection_string = (
-        connection_string = (
         "DRIVER={" + st.secrets["database"]["driver"] + "};"
         "SERVER=" + st.secrets["database"]["server"] + ";"
         "DATABASE=" + st.secrets["database"]["database"] + ";"
