@@ -6,13 +6,15 @@ def get_connection():
     """
     Establish a connection to the Microsoft SQL Server database.
     """
-    connection_string = (
-        f'DRIVER={{{st.secrets["database"]["driver"]}}};'
-        f'SERVER={st.secrets["database"]["server"]};'
-        f'DATABASE={st.secrets["database"]["database"]};'
-        f'UID={st.secrets["database"]["user"]};'
-        f'PWD={st.secrets["database"]["password"]}'
-    )
+    cconnection_string = (
+            "DRIVER={FreeTDS};"
+            "SERVER=" + st.secrets["database"]["server"] + ";"
+            "PORT=1433;"
+            "DATABASE=" + st.secrets["database"]["database"] + ";"
+            "UID=" + st.secrets["database"]["user"] + ";"
+            "PWD=" + st.secrets["database"]["password"] + ";"
+            "TDS_Version=8.0;"
+        )
     return pyodbc.connect(connection_string)
 
 def convert_date(date_str):
