@@ -7,9 +7,9 @@ import pyodbc
 
 def get_connection():
     connection_string = (
-        "DRIVER={FreeTDS};"
+        connection_string = (
+        "DRIVER={" + st.secrets["database"]["driver"] + "};"
         "SERVER=" + st.secrets["database"]["server"] + ";"
-        "PORT=1433;"
         "DATABASE=" + st.secrets["database"]["database"] + ";"
         "UID=" + st.secrets["database"]["user"] + ";"
         "PWD=" + st.secrets["database"]["password"] + ";"
