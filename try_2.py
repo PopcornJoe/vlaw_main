@@ -16,7 +16,7 @@ import tempfile
 import pyodbc
 
 def get_connection():
-       connection_string = (
+    connection_string = (
         f"DRIVER={{{st.secrets['database']['driver']}}};"
         f"SERVER={st.secrets['database']['server']};"
         f"PORT={st.secrets['database']['port']};"
@@ -24,8 +24,9 @@ def get_connection():
         f"UID={st.secrets['database']['user']};"
         f"PWD={st.secrets['database']['password']};"
         f"sslmode={st.secrets['database']['sslmode']};"
-           )
-       return pyodbc.connect(connection_string))
+    )
+    return pyodbc.connect(connection_string)
+
 def convert_date(date_str):
     """
     Convert a date string from dd/mm/yyyy to yyyy-mm-dd format.
