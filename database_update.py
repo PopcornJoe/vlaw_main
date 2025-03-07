@@ -1,21 +1,19 @@
 import streamlit as st
 from datetime import datetime
-import pyodbc
+import psycopg2
 
 def get_connection():
     """
-    Establish a connection to the Microsoft SQL Server database.
+    Establish a connection to the Neon (PostgreSQL) database.
     """
-    cconnection_string = (
-            "DRIVER={FreeTDS};"
-            "SERVER=" + st.secrets["database"]["server"] + ";"
-            "PORT=1433;"
-            "DATABASE=" + st.secrets["database"]["database"] + ";"
-            "UID=" + st.secrets["database"]["user"] + ";"
-            "PWD=" + st.secrets["database"]["password"] + ";"
-            "TDS_Version=8.0;"
-        )
-    return pyodbc.connect(connection_string)
+    return psycopg2.connect(
+        host=st.secrets["database"]["server"],
+        dbname=st.secrets["database"]["database"],
+        user=st.secrets["database"]["user"],
+        password=st.secrets["database"]["password"],
+        port=st.secrets["database"]["port"],
+        sslmode=st.secrets["database"].get("sslmode", "require")
+    )
 
 def convert_date(date_str):
     """
@@ -114,7 +112,7 @@ def update_database(updated_fields, searched_matter_num, doc_type=None):
         "PROPERTY ZONE": "propertyzone",
         "RATES AND TAXES2": "ratesandtaxes",
         "LEVIES": "levies",
-        "DATE OF RATES AND TAXES": "DATERATEANDTAXES",
+        "DATE OF RATES AND TAXES": "daterateandtaxes",
         "SHERIFF CONDUCTION SALE": "which_sheriff",
         "DEFAULT SHERIFF AND ADDRESS": "defaultsheriffaddress",
         "IF NOT DEFAULT SHERIFF": "ifnotdefaultsheriff",
@@ -153,9 +151,9 @@ def update_database(updated_fields, searched_matter_num, doc_type=None):
         st.warning("No valid fields to update.")
         return
 
-    # Use SQL Server style parameter markers "?" instead of "%s"
-    set_clause = ", ".join([f"{col} = ?" for col in update_fields.keys()])
-    update_query = f"UPDATE vlaw_base SET {set_clause} WHERE mat = ?;"
+    # Use PostgreSQL style parameter markers ("%s")
+    set_clause = ", ".join([f"{col} = %s" for col in update_fields.keys()])
+    update_query = f"UPDATE vlaw_base SET {set_clause} WHERE mat = %s;"
     values = list(update_fields.values())
     values.append(matter_num)
 
