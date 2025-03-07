@@ -17,14 +17,15 @@ import pyodbc
 
 def get_connection():
        connection_string = (
-        "DRIVER={" + st.secrets["database"]["driver"] + "};"
-        "SERVER=" + st.secrets["database"]["server"] + ";"
-        "DATABASE=" + st.secrets["database"]["database"] + ";"
-        "UID=" + st.secrets["database"]["user"] + ";"
-        "PWD=" + st.secrets["database"]["password"] + ";"
-        "TDS_Version=8.0;"
-        )
-       return pyodbc.connect(connection_string)
+        f"DRIVER={{{st.secrets['database']['driver']}}};"
+        f"SERVER={st.secrets['database']['server']};"
+        f"PORT={st.secrets['database']['port']};"
+        f"DATABASE={st.secrets['database']['database']};"
+        f"UID={st.secrets['database']['user']};"
+        f"PWD={st.secrets['database']['password']};"
+        f"sslmode={st.secrets['database']['sslmode']};"
+           )
+       return pyodbc.connect(connection_string))
 def convert_date(date_str):
     """
     Convert a date string from dd/mm/yyyy to yyyy-mm-dd format.
