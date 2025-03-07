@@ -53,7 +53,7 @@ def flatten_row(row, expected_length):
 def search_matter(matter_no):
     conn = get_connection()
     cur = conn.cursor()
-    query = "SELECT * FROM vlaw_base WHERE mat = ?"
+    query = "SELECT * FROM vlaw_base WHERE mat = %s"
     cur.execute(query, (matter_no,))
     rows = cur.fetchall()
     colnames = [desc[0] for desc in cur.description]
