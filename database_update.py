@@ -11,7 +11,6 @@ def get_connection():
         dbname=st.secrets["database"]["database"],
         user=st.secrets["database"]["user"],
         password=st.secrets["database"]["password"],
-        port=st.secrets["database"]["port"],
         sslmode=st.secrets["database"].get("sslmode", "require")
     )
 
