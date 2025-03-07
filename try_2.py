@@ -13,19 +13,16 @@ import search
 import database_update
 import ocrmypdf
 import tempfile
-import pyodbc
+import psycopg2
 
 def get_connection():
-    connection_string = (
-        f"DRIVER={{{st.secrets['database']['driver']}}};"
-        f"SERVER={st.secrets['database']['server']};"
-        f"PORT={st.secrets['database']['port']};"
-        f"DATABASE={st.secrets['database']['database']};"
-        f"UID={st.secrets['database']['user']};"
-        f"PWD={st.secrets['database']['password']};"
-        f"sslmode={st.secrets['database']['sslmode']};"
+    return psycopg2.connect(
+        dbname=st.secrets['database']['database'],
+        user=st.secrets['database']['user'],
+        password=st.secrets['database']['password'],
+        host=st.secrets['database']['server'],
+        port=st.secrets['database']['port']
     )
-    return pyodbc.connect(connection_string)
 
 def convert_date(date_str):
     """
