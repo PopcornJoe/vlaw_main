@@ -5,10 +5,8 @@ import io
 from src.pdf_processor import extract_text_from_pdf, extract_data_from_text
 from src.word_processor import process_templates, TEMPLATES
 from src.utils import save_uploaded_file, cleanup_temp_files
-import pyodbc  # Updated: using pyodbc for SQL Server
+import psycopg2
 from datetime import datetime
-
-
 
 def clean_numeric(value):
     """Convert string numbers with commas into proper float values."""
@@ -25,7 +23,7 @@ def none_if_blank(val):
         return None
     return val
 
-# Updated insert query for SQL Server using parameter markers (?) and the OUTPUT clause.
+# Updated insert query for PostgreSQL using %s parameter markers and RETURNING clause.
 insert_query = """
     INSERT INTO vlaw_base (
         matter_name,
@@ -40,9 +38,20 @@ insert_query = """
         instalmentamount,
         arrearsamount,
         fullpropdescription
-    ) OUTPUT INSERTED.id1
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+    RETURNING id1;
     """
+
+def get_connection():
+    """Connect to Neon (PostgreSQL) using psycopg2."""
+    return psycopg2.connect(
+        host=st.secrets["database"]["server"],
+        dbname=st.secrets["database"]["database"],
+        user=st.secrets["database"]["user"],
+        password=st.secrets["database"]["password"],
+        port=st.secrets["database"]["port"],
+        sslmode=st.secrets["database"].get("sslmode", "require")
+    )
 
 def legal_document_processor():
     st.title("Legal Document Processor ⚖️")
@@ -83,21 +92,13 @@ def legal_document_processor():
                 submit_button = st.form_submit_button("Update Data and Generate Documents")
             
             if submit_button:
-                connection_string = (
-                    "DRIVER={FreeTDS};"
-                    "SERVER=" + st.secrets["database"]["server"] + ";"
-                    "PORT=1433;"
-                    "DATABASE=" + st.secrets["database"]["database"] + ";"
-                    "UID=" + st.secrets["database"]["user"] + ";"
-                    "PWD=" + st.secrets["database"]["password"] + ";"
-                    "TDS_Version=8.0;"
-                )
                 try:
-                    conn = pyodbc.connect(connection_string)
+                    conn = get_connection()
                     cur = conn.cursor()
-                    st.success("Connected successfully!")
+                    st.success("Connected to Neon successfully!")
                 except Exception as e:
-                    st.error(f"Error connecting: {e}")
+                    st.error(f"Error connecting to Neon: {e}")
+                    return
                 
                 # Update extracted_data with values from form_data
                 for key, value in form_data.items():
