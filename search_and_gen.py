@@ -3,19 +3,16 @@ import pandas as pd
 from docx import Document
 import datetime
 import os
-import pyodbc
+import psycopg2
 
 def get_connection():
-    connection_string = (
-        "DRIVER={ODBC Driver 17 for SQL Server};"
-        "SERVER=" + st.secrets["database"]["server"] + ";"
-        "DATABASE=" + st.secrets["database"]["database"] + ";"
-        "UID=" + st.secrets["database"]["user"] + ";"
-        "PWD=" + st.secrets["database"]["password"] + ";"
-        "Connection Timeout=60;"
-        
+    return psycopg2.connect(
+        host=st.secrets["database"]["server"],
+        dbname=st.secrets["database"]["database"],
+        user=st.secrets["database"]["user"],
+        password=st.secrets["database"]["password"],
+        sslmode="require"
     )
-    return pyodbc.connect(connection_string)
 
 def flatten_row(row, expected_length):
     """
