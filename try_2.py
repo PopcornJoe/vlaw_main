@@ -16,16 +16,13 @@ import tempfile
 import psycopg2
 
 def get_connection():
-    """Connect to Neon (PostgreSQL) using psycopg2."""
     return psycopg2.connect(
-        host=st.secrets["database"]["server"],       # e.g. "ep-xxx.us-east-2.aws.neon.tech"
-        dbname=st.secrets["database"]["database"],   # e.g. "neondb"
-        user=st.secrets["database"]["user"],         # e.g. "my_neon_user"
-        password=st.secrets["database"]["password"], # e.g. "some_strong_password"
-        port=st.secrets["database"]["port"],         # e.g. "5432"
-        sslmode="require"                            # Neon typically requires SSL
+        host=st.secrets["database"]["server"],
+        dbname=st.secrets["database"]["database"],
+        user=st.secrets["database"]["user"],
+        password=st.secrets["database"]["password"],
+        sslmode="require"
     )
-
 def convert_date(date_str):
     """
     Convert a date string from dd/mm/yyyy to yyyy-mm-dd format.
