@@ -73,7 +73,6 @@ def search_matter(matter_no):
 
 
 
-os.environ["TESSERACT_PATH"] = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
 def extract_text_from_pdf(pdf_file):
     """
