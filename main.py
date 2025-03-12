@@ -32,19 +32,17 @@ def main():
         0                     # expiry_days=0 => ephemeral login (no persistence)
     )
 
-    # 4. Render the login form
-    name, authentication_status, username = authenticator.login("Login", "main")
+    # 4. Render the login form (pass location as a keyword argument)
+    name, authentication_status, username = authenticator.login("Login", location="main")
 
     # 5. Check login state
     if authentication_status:
-        # Optional: show a logout button and a welcome message
         st.sidebar.write(f"Welcome, {username}")
         authenticator.logout("Logout", "sidebar")
 
         # Your main app content
         logo = Image.open('Van-Hulsteyns-Logo-Large.png')
         st.sidebar.image(logo)
-
         with st.sidebar:
             selected = option_menu(
                 menu_title="",
