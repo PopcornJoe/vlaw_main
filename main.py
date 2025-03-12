@@ -1,6 +1,5 @@
 import streamlit as st
 import streamlit_authenticator as stauth
-import json
 import pdfplumber
 import re
 from PIL import Image
@@ -15,16 +14,16 @@ import pdf_convert
 import search_and_gen
 import pdf_merge
 
-# Helper to convert nested AttrDicts to plain dictionaries
+# Define a helper to convert st.secrets entries to plain dictionaries.
 def to_plain_dict(d):
     if isinstance(d, dict):
         return {k: to_plain_dict(v) for k, v in d.items()}
-    elif isinstance(d, list):
+    elif hasattr(d, '__iter__') and not isinstance(d, str):
         return [to_plain_dict(item) for item in d]
     else:
         return d
 
-# Convert st.secrets["credentials"] to a plain dict
+# Convert st.secrets["credentials"] into a mutable plain dictionary.
 credentials = to_plain_dict(st.secrets["credentials"])
 
 # Define a local cookie configuration for ephemeral login (no persistence)
@@ -34,7 +33,7 @@ cookie_config = {
     "expiry_days": 0              # 0 means no persistent cookie
 }
 
-# Initialize the authenticator using the mutable credentials and local cookie_config
+# Initialize the authenticator using the plain credentials and local cookie_config
 authenticator = stauth.Authenticate(
     credentials,
     cookie_config["name"],
