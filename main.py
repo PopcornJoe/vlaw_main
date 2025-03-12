@@ -1,6 +1,6 @@
 import streamlit as st
 import streamlit_authenticator as stauth
-import copy
+import json
 import pdfplumber
 import re
 from PIL import Image
@@ -15,14 +15,14 @@ import pdf_convert
 import search_and_gen
 import pdf_merge
 
-# Load credentials from st.secrets and make a mutable deep copy
-credentials = copy.deepcopy(st.secrets["credentials"])
+# Convert st.secrets["credentials"] into a mutable dictionary.
+credentials = json.loads(json.dumps(st.secrets["credentials"]))
 
 # Define a local cookie configuration for ephemeral login (no persistence)
 cookie_config = {
-    "name": "dummy_cookie_name",  # placeholder name
-    "key": "dummy_key",           # placeholder key
-    "expiry_days": 0              # 0 days means no persistent cookie
+    "name": "dummy_cookie_name",  # placeholder
+    "key": "dummy_key",           # placeholder
+    "expiry_days": 0              # 0 means no persistent cookie
 }
 
 # Initialize the authenticator using the mutable credentials and local cookie_config
@@ -64,7 +64,3 @@ elif authentication_status is False:
     st.error("Username or password is incorrect.")
 elif authentication_status is None:
     st.warning("Please enter your username and password.")
-
-if __name__ == "__main__":
-    # The app runs when this file is executed.
-    pass
