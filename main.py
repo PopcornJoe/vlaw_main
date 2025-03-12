@@ -26,7 +26,7 @@ def main():
     authenticator = stauth.Authenticate(credentials, cookie_name, cookie_key, expiry_days)
 
     # Use 'sidebar' as the location (instead of 'main' to avoid the ValueError)
-    name, authentication_status, username = authenticator.login("Login", location="sidebar")
+    name, authentication_status, username = authenticator.login(location="sidebar", title="Login")
 
     if authentication_status:
         st.sidebar.write(f"Welcome, {username}")
