@@ -1,51 +1,36 @@
 import streamlit as st
 import streamlit_authenticator as stauth
-import copy
-import json
 from PIL import Image
 from streamlit_option_menu import option_menu
-from datetime import datetime
-
 import app
 import try_2
 import pdf_convert
 import search_and_gen
 import pdf_merge
 
-def to_plain_dict(obj):
-    """Recursively convert a st.secrets AttrDict or list into a plain Python dict or list."""
-    if isinstance(obj, dict):
-        new_dict = {}
-        for k, v in obj.items():
-            new_dict[k] = to_plain_dict(v)
-        return new_dict
-    elif isinstance(obj, list):
-        return [to_plain_dict(item) for item in obj]
-    else:
-        return obj
-
 def main():
-    # 1) Clone the 'credentials' section of st.secrets into a local dictionary
-    #    This ensures no references back to st.secrets.
-    raw_credentials = st.secrets.get("credentials", {})
-    credentials = to_plain_dict(raw_credentials)
-
-    # 2) Define ephemeral cookie config
-    cookie_config = {
-        "name": "dummy_cookie_name",
-        "key": "dummy_key",
-        "expiry_days": 0  # ephemeral
+    # 1. Hardcode your credentials in a normal Python dict
+    # NOTE: This is not recommended for real secrets in a public repo.
+    #       It's just the most straightforward way to bypass st.secrets issues.
+    credentials = {
+        "usernames": {
+            "BarbaraS@vhlaw.co.za": {
+                "email": "BarbaraS@vhlaw.co.za",
+                "name": "BarbaraS@vhlaw.co.za",
+                "password": "$2b$12$p1IcU.icMEClnjgypAEB5unUmYDlr0TvslRtRKfKnFsWal/uO8itq"
+            }
+        }
     }
 
-    # 3) Initialize the authenticator with the local dictionary
-    authenticator = stauth.Authenticate(
-        credentials,
-        cookie_config["name"],
-        cookie_config["key"],
-        cookie_config["expiry_days"]
-    )
+    # 2. Define ephemeral cookie config
+    cookie_name = "dummy_cookie_name"
+    cookie_key = "dummy_key"
+    expiry_days = 0  # ephemeral: no persistent login
 
-    # 4) Render the login form
+    # 3. Initialize streamlit_authenticator
+    authenticator = stauth.Authenticate(credentials, cookie_name, cookie_key, expiry_days)
+
+    # 4. Show login form
     name, authentication_status, username = authenticator.login("Login", location="main")
 
     if authentication_status:
@@ -54,6 +39,7 @@ def main():
 
         logo = Image.open('Van-Hulsteyns-Logo-Large.png')
         st.sidebar.image(logo)
+
         with st.sidebar:
             selected = option_menu(
                 menu_title="",
@@ -75,7 +61,6 @@ def main():
     elif authentication_status is False:
         st.error("Username or password is incorrect.")
     else:
-        # authentication_status is None
         st.warning("Please enter your username and password.")
 
 if __name__ == "__main__":
