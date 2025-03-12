@@ -25,11 +25,10 @@ def main():
 
     authenticator = stauth.Authenticate(credentials, cookie_name, cookie_key, expiry_days)
 
-    # For streamlit-authenticator v0.4.2 the login method requires two positional arguments:
-    #   (form_name, location)
-    login_result = authenticator.login("Login", "sidebar")
+    # Use "main" for the login form to avoid the location error.
+    login_result = authenticator.login("Login", "main")
     
-    # If the user hasn't submitted the form, login_result will be None.
+    # When the app first loads, login_result may be None.
     if login_result is None:
         st.warning("Please enter your username and password.")
         st.stop()
@@ -41,12 +40,14 @@ def main():
         st.stop()
 
     if authentication_status:
+        # Once logged in, show welcome message and logout button in the sidebar.
         st.sidebar.write(f"Welcome, {username}")
         authenticator.logout("Logout", "sidebar")
 
         # Display your logo on the sidebar
         logo = Image.open('Van-Hulsteyns-Logo-Large.png')
         st.sidebar.image(logo)
+
         with st.sidebar:
             selected = option_menu(
                 menu_title="",
