@@ -18,7 +18,7 @@ import search_and_gen
 import pdf_merge
 
 def main():
-    # 1. Read the JSON string from secrets
+    # 1. Read the JSON string from Streamlit secrets
     creds_json = st.secrets["auth"]["credentials"]
 
     # 2. Convert that JSON string to a Python dictionary
@@ -32,11 +32,12 @@ def main():
         0                     # expiry_days=0 => ephemeral login (no persistence)
     )
 
-    # 4. Render the login form (pass location as a keyword argument)
+    # 4. Render the login form (location set once as a keyword argument)
     name, authentication_status, username = authenticator.login("Login", location="main")
 
     # 5. Check login state
     if authentication_status:
+        # Show a logout button and welcome message
         st.sidebar.write(f"Welcome, {username}")
         authenticator.logout("Logout", "sidebar")
 
@@ -63,7 +64,8 @@ def main():
 
     elif authentication_status is False:
         st.error("Username or password is incorrect.")
-    elif authentication_status is None:
+    else:
+        # authentication_status is None
         st.warning("Please enter your username and password.")
 
 if __name__ == "__main__":
