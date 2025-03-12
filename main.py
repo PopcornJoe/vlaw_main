@@ -25,13 +25,26 @@ def main():
 
     authenticator = stauth.Authenticate(credentials, cookie_name, cookie_key, expiry_days)
 
-    # Use 'sidebar' as the location for the login widget
-    name, authentication_status, username = authenticator.login(location="sidebar")
+    # For streamlit-authenticator v0.4.2 the login method requires two positional arguments:
+    #   (form_name, location)
+    login_result = authenticator.login("Login", "sidebar")
+    
+    # If the user hasn't submitted the form, login_result will be None.
+    if login_result is None:
+        st.warning("Please enter your username and password.")
+        st.stop()
+
+    name, authentication_status, username = login_result
+
+    if authentication_status is False:
+        st.error("Username or password is incorrect.")
+        st.stop()
 
     if authentication_status:
         st.sidebar.write(f"Welcome, {username}")
         authenticator.logout("Logout", "sidebar")
 
+        # Display your logo on the sidebar
         logo = Image.open('Van-Hulsteyns-Logo-Large.png')
         st.sidebar.image(logo)
         with st.sidebar:
@@ -51,11 +64,6 @@ def main():
             search_and_gen.app()
         elif selected == "Merge PDF":
             pdf_merge.merge_pdfs()
-
-    elif authentication_status is False:
-        st.error("Username or password is incorrect.")
-    else:
-        st.warning("Please enter your username and password.")
 
 if __name__ == "__main__":
     main()
