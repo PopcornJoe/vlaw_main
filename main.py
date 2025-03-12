@@ -9,9 +9,7 @@ import search_and_gen
 import pdf_merge
 
 def main():
-    # 1. Hardcode your credentials in a normal Python dict
-    # NOTE: This is not recommended for real secrets in a public repo.
-    #       It's just the most straightforward way to bypass st.secrets issues.
+    # Hardcode credentials to avoid secrets issues
     credentials = {
         "usernames": {
             "BarbaraS@vhlaw.co.za": {
@@ -22,16 +20,15 @@ def main():
         }
     }
 
-    # 2. Define ephemeral cookie config
     cookie_name = "dummy_cookie_name"
     cookie_key = "dummy_key"
-    expiry_days = 0  # ephemeral: no persistent login
+    expiry_days = 0
 
-    # 3. Initialize streamlit_authenticator
     authenticator = stauth.Authenticate(credentials, cookie_name, cookie_key, expiry_days)
 
-    # 4. Show login form
-    name, authentication_status, username = authenticator.login("Login", location="main")
+    # **Use only one approach** to specify location.
+    # Here, we choose positional: the second argument is "main"
+    name, authentication_status, username = authenticator.login("Login", "main")
 
     if authentication_status:
         st.sidebar.write(f"Welcome, {username}")
@@ -39,7 +36,6 @@ def main():
 
         logo = Image.open('Van-Hulsteyns-Logo-Large.png')
         st.sidebar.image(logo)
-
         with st.sidebar:
             selected = option_menu(
                 menu_title="",
