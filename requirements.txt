@@ -98,4 +98,5 @@ wrapt==1.17.2
 zipp==3.19.2
 ocrmypdf==13.7.0
 pikepdf==8.2.2
-streamlit-authenticator==0.4.2
+streamlit-authenticator==0.2.3
+
