@@ -1,5 +1,6 @@
 import streamlit as st
 import streamlit_authenticator as stauth
+import copy
 import pdfplumber
 import re
 from PIL import Image
@@ -14,18 +15,17 @@ import pdf_convert
 import search_and_gen
 import pdf_merge
 
-# Load credentials from st.secrets (stored securely in your Streamlit Cloud settings)
-credentials = st.secrets["credentials"]
+# Load credentials from st.secrets and make a mutable deep copy
+credentials = copy.deepcopy(st.secrets["credentials"])
 
-# Instead of reading cookie settings from st.secrets (which causes assignment errors),
-# define a local mutable dictionary for cookie configuration.
+# Define a local cookie configuration for ephemeral login (no persistence)
 cookie_config = {
-    "name": "dummy_cookie_name",  # placeholder; not used persistently
-    "key": "dummy_key",           # placeholder; used for encryption if needed
-    "expiry_days": 0              # 0 means the session cookie expires immediately (ephemeral login)
+    "name": "dummy_cookie_name",  # placeholder name
+    "key": "dummy_key",           # placeholder key
+    "expiry_days": 0              # 0 days means no persistent cookie
 }
 
-# Initialize the authenticator using credentials and the local cookie_config
+# Initialize the authenticator using the mutable credentials and local cookie_config
 authenticator = stauth.Authenticate(
     credentials,
     cookie_config["name"],
@@ -37,9 +37,7 @@ authenticator = stauth.Authenticate(
 name, authentication_status, username = authenticator.login("Login", "main")
 
 if authentication_status:
-    # Once logged in, show the app content
     st.sidebar.write(f"Welcome, {username}")
-    # Optional: provide a logout button
     authenticator.logout("Logout", "sidebar")
     
     logo = Image.open('Van-Hulsteyns-Logo-Large.png')
@@ -68,5 +66,5 @@ elif authentication_status is None:
     st.warning("Please enter your username and password.")
 
 if __name__ == "__main__":
-    # Run the main function
-    pass  # the app has already executed above
+    # The app runs when this file is executed.
+    pass
