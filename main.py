@@ -9,7 +9,6 @@ import search_and_gen
 import pdf_merge
 
 def main():
-    # Hardcode credentials to avoid secrets issues
     credentials = {
         "usernames": {
             "BarbaraS@vhlaw.co.za": {
@@ -26,9 +25,8 @@ def main():
 
     authenticator = stauth.Authenticate(credentials, cookie_name, cookie_key, expiry_days)
 
-    # **Use only one approach** to specify location.
-    # Here, we choose positional: the second argument is "main"
-    name, authentication_status, username = authenticator.login("Login", "main")
+    # Use 'sidebar' as the location (instead of 'main' to avoid the ValueError)
+    name, authentication_status, username = authenticator.login("Login", location="sidebar")
 
     if authentication_status:
         st.sidebar.write(f"Welcome, {username}")
