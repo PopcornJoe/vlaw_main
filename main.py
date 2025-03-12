@@ -14,51 +14,59 @@ import pdf_convert
 import search_and_gen
 import pdf_merge
 
-logo = Image.open('Van-Hulsteyns-Logo-Large.png')
+# Load credentials from st.secrets (stored securely in your Streamlit Cloud settings)
+credentials = st.secrets["credentials"]
 
-def main():
-    # 1) Load only the credentials (no cookie config)
-    credentials = st.secrets["credentials"]
+# Instead of reading cookie settings from st.secrets (which causes assignment errors),
+# define a local mutable dictionary for cookie configuration.
+cookie_config = {
+    "name": "dummy_cookie_name",  # placeholder; not used persistently
+    "key": "dummy_key",           # placeholder; used for encryption if needed
+    "expiry_days": 0              # 0 means the session cookie expires immediately (ephemeral login)
+}
 
-    # 2) Pass dummy cookie name/key, and set expiry_days=0 for no persistence
-    authenticator = stauth.Authenticate(
-        credentials,
-        "dummy_cookie_name",  # placeholder
-        "dummy_key",          # placeholder
-        0                     # 0 days => ephemeral session
-    )
+# Initialize the authenticator using credentials and the local cookie_config
+authenticator = stauth.Authenticate(
+    credentials,
+    cookie_config["name"],
+    cookie_config["key"],
+    cookie_config["expiry_days"]
+)
 
-    # 3) Display the login form
-    name, authentication_status, username = authenticator.login("Login", "main")
+# Render the login widget
+name, authentication_status, username = authenticator.login("Login", "main")
 
-    if authentication_status:
-        # Show your main content only if logged in
-        st.sidebar.image(logo)
-        with st.sidebar:
-            selected = option_menu(
-                menu_title="",
-                options=["Search and generate", "Statement upload", "Summons Upload"],
-                default_index=0,
-            )
-        if selected == "Statement upload":
-            app.legal_document_processor()
-        elif selected == "Summons Upload":
-            try_2.summons_upload()
-        elif selected == "PDF convert":
-            pdf_convert.pdf_convert()
-        elif selected == "Search and generate":
-            search_and_gen.app()
-        elif selected == "Merge PDF":
-            pdf_merge.merge_pdfs()
+if authentication_status:
+    # Once logged in, show the app content
+    st.sidebar.write(f"Welcome, {username}")
+    # Optional: provide a logout button
+    authenticator.logout("Logout", "sidebar")
+    
+    logo = Image.open('Van-Hulsteyns-Logo-Large.png')
+    st.sidebar.image(logo)
+    with st.sidebar:
+        selected = option_menu(
+            menu_title="",
+            options=["Search and generate", "Statement upload", "Summons Upload"],
+            default_index=0,
+        )
 
-        # You can still offer a logout button if you like,
-        # though ephemeral sessions typically end when the user closes the browser
-        authenticator.logout("Logout", "sidebar")
+    if selected == "Statement upload":
+        app.legal_document_processor()
+    elif selected == "Summons Upload":
+        try_2.summons_upload()
+    elif selected == "PDF convert":
+        pdf_convert.pdf_convert()
+    elif selected == "Search and generate":
+        search_and_gen.app()
+    elif selected == "Merge PDF":
+        pdf_merge.merge_pdfs()
 
-    elif authentication_status is False:
-        st.error("Username or password is incorrect.")
-    elif authentication_status is None:
-        st.warning("Please enter your username and password.")
+elif authentication_status is False:
+    st.error("Username or password is incorrect.")
+elif authentication_status is None:
+    st.warning("Please enter your username and password.")
 
 if __name__ == "__main__":
-    main()
+    # Run the main function
+    pass  # the app has already executed above
