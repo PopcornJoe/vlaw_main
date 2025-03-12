@@ -15,13 +15,22 @@ import pdf_convert
 import search_and_gen
 import pdf_merge
 
-# Convert st.secrets["credentials"] into a mutable dictionary.
-credentials = json.loads(json.dumps(st.secrets["credentials"]))
+# Helper to convert nested AttrDicts to plain dictionaries
+def to_plain_dict(d):
+    if isinstance(d, dict):
+        return {k: to_plain_dict(v) for k, v in d.items()}
+    elif isinstance(d, list):
+        return [to_plain_dict(item) for item in d]
+    else:
+        return d
+
+# Convert st.secrets["credentials"] to a plain dict
+credentials = to_plain_dict(st.secrets["credentials"])
 
 # Define a local cookie configuration for ephemeral login (no persistence)
 cookie_config = {
-    "name": "dummy_cookie_name",  # placeholder
-    "key": "dummy_key",           # placeholder
+    "name": "dummy_cookie_name",  # placeholder name
+    "key": "dummy_key",           # placeholder key
     "expiry_days": 0              # 0 means no persistent cookie
 }
 
