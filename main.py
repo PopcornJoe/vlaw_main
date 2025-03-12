@@ -1,5 +1,6 @@
 import streamlit as st
 import streamlit_authenticator as stauth
+import json
 import pdfplumber
 import re
 from PIL import Image
@@ -8,67 +9,64 @@ import os
 import zipfile
 import io
 from datetime import datetime
+
+# Import your existing modules
 import app
 import try_2
 import pdf_convert
 import search_and_gen
 import pdf_merge
 
-# Define a helper to convert st.secrets entries to plain dictionaries.
-def to_plain_dict(d):
-    if isinstance(d, dict):
-        return {k: to_plain_dict(v) for k, v in d.items()}
-    elif hasattr(d, '__iter__') and not isinstance(d, str):
-        return [to_plain_dict(item) for item in d]
-    else:
-        return d
+def main():
+    # 1. Read the JSON string from secrets
+    creds_json = st.secrets["auth"]["credentials"]
 
-# Convert st.secrets["credentials"] into a mutable plain dictionary.
-credentials = to_plain_dict(st.secrets["credentials"])
+    # 2. Convert that JSON string to a Python dictionary
+    credentials = json.loads(creds_json)
 
-# Define a local cookie configuration for ephemeral login (no persistence)
-cookie_config = {
-    "name": "dummy_cookie_name",  # placeholder name
-    "key": "dummy_key",           # placeholder key
-    "expiry_days": 0              # 0 means no persistent cookie
-}
+    # 3. Initialize streamlit_authenticator with ephemeral cookie settings
+    authenticator = stauth.Authenticate(
+        credentials,
+        "dummy_cookie_name",  # placeholder cookie name
+        "dummy_key",          # placeholder secret key
+        0                     # expiry_days=0 => ephemeral login (no persistence)
+    )
 
-# Initialize the authenticator using the plain credentials and local cookie_config
-authenticator = stauth.Authenticate(
-    credentials,
-    cookie_config["name"],
-    cookie_config["key"],
-    cookie_config["expiry_days"]
-)
+    # 4. Render the login form
+    name, authentication_status, username = authenticator.login("Login", "main")
 
-# Render the login widget
-name, authentication_status, username = authenticator.login("Login", "main")
+    # 5. Check login state
+    if authentication_status:
+        # Optional: show a logout button and a welcome message
+        st.sidebar.write(f"Welcome, {username}")
+        authenticator.logout("Logout", "sidebar")
 
-if authentication_status:
-    st.sidebar.write(f"Welcome, {username}")
-    authenticator.logout("Logout", "sidebar")
-    
-    logo = Image.open('Van-Hulsteyns-Logo-Large.png')
-    st.sidebar.image(logo)
-    with st.sidebar:
-        selected = option_menu(
-            menu_title="",
-            options=["Search and generate", "Statement upload", "Summons Upload"],
-            default_index=0,
-        )
+        # Your main app content
+        logo = Image.open('Van-Hulsteyns-Logo-Large.png')
+        st.sidebar.image(logo)
 
-    if selected == "Statement upload":
-        app.legal_document_processor()
-    elif selected == "Summons Upload":
-        try_2.summons_upload()
-    elif selected == "PDF convert":
-        pdf_convert.pdf_convert()
-    elif selected == "Search and generate":
-        search_and_gen.app()
-    elif selected == "Merge PDF":
-        pdf_merge.merge_pdfs()
+        with st.sidebar:
+            selected = option_menu(
+                menu_title="",
+                options=["Search and generate", "Statement upload", "Summons Upload", "PDF convert", "Merge PDF"],
+                default_index=0,
+            )
 
-elif authentication_status is False:
-    st.error("Username or password is incorrect.")
-elif authentication_status is None:
-    st.warning("Please enter your username and password.")
+        if selected == "Statement upload":
+            app.legal_document_processor()
+        elif selected == "Summons Upload":
+            try_2.summons_upload()
+        elif selected == "PDF convert":
+            pdf_convert.pdf_convert()
+        elif selected == "Search and generate":
+            search_and_gen.app()
+        elif selected == "Merge PDF":
+            pdf_merge.merge_pdfs()
+
+    elif authentication_status is False:
+        st.error("Username or password is incorrect.")
+    elif authentication_status is None:
+        st.warning("Please enter your username and password.")
+
+if __name__ == "__main__":
+    main()
