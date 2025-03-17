@@ -1,12 +1,12 @@
-# File: main.py
+# main.py
 
 import streamlit as st
+import streamlit_authenticator as stauth
 from PIL import Image
 from streamlit_option_menu import option_menu
-import streamlit_authenticator as stauth
 
-# Import the helper function from .streamlit/auth_config
-from .streamlit.auth_config import get_authenticator
+# Import the helper function from auth_config.py
+from auth_config import get_authenticator
 
 import app
 import try_2
@@ -15,25 +15,23 @@ import search_and_gen
 import pdf_merge
 
 def main():
-    # 1. Get the authenticator object from auth_config
+    # 1. Create the authenticator using our separate file
     authenticator = get_authenticator()
 
     # 2. Use the old API call for 0.2.3
     login_result = authenticator.login("Login", "main")
 
-    # 3. Handle the None case if user hasn't submitted credentials
+    # 3. If the user hasn't submitted credentials yet, login_result is None
     if login_result is None:
         st.warning("Please enter your username and password.")
         st.stop()
 
     name, authentication_status, username = login_result
 
-    # 4. If the user typed invalid credentials
     if authentication_status is False:
         st.error("Username or password is incorrect.")
         st.stop()
 
-    # 5. If authenticated, show the rest of the app
     if authentication_status:
         st.sidebar.write(f"Welcome, {username}")
         authenticator.logout("Logout", "sidebar")
