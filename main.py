@@ -1,7 +1,13 @@
+# File: main.py
+
 import streamlit as st
-import streamlit_authenticator as stauth
 from PIL import Image
 from streamlit_option_menu import option_menu
+import streamlit_authenticator as stauth
+
+# Import the helper function from .streamlit/auth_config
+from .streamlit.auth_config import get_authenticator
+
 import app
 import try_2
 import pdf_convert
@@ -9,48 +15,25 @@ import search_and_gen
 import pdf_merge
 
 def main():
-    # 1. Build a dictionary for streamlit_authenticator from secrets
-    # st.secrets["credentials"] will look like:
-    # {
-    #   "usernames": {
-    #       "BarbaraS@vhlaw.co.za": {
-    #           "email": "...",
-    #           "name": "...",
-    #           "password": "..."
-    #       },
-    #       ...
-    #   }
-    # }
-    credentials_dict = {
-        "usernames": dict(st.secrets["credentials"]["usernames"])
-    }
+    # 1. Get the authenticator object from auth_config
+    authenticator = get_authenticator()
 
-    # 2. Cookie/session settings
-    cookie_name = "dummy_cookie_name"
-    cookie_key = "dummy_key"
-    expiry_days = 0
-
-    # 3. Create the authenticator object
-    authenticator = stauth.Authenticate(
-        credentials=credentials_dict,
-        cookie_name=cookie_name,
-        key=cookie_key,
-        expiry_days=expiry_days
-    )
-
-    # 4. Show the login form (old API style, valid if pinned to v0.2.3)
+    # 2. Use the old API call for 0.2.3
     login_result = authenticator.login("Login", "main")
 
+    # 3. Handle the None case if user hasn't submitted credentials
     if login_result is None:
         st.warning("Please enter your username and password.")
         st.stop()
 
     name, authentication_status, username = login_result
 
+    # 4. If the user typed invalid credentials
     if authentication_status is False:
         st.error("Username or password is incorrect.")
         st.stop()
 
+    # 5. If authenticated, show the rest of the app
     if authentication_status:
         st.sidebar.write(f"Welcome, {username}")
         authenticator.logout("Logout", "sidebar")
