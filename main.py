@@ -9,26 +9,38 @@ import search_and_gen
 import pdf_merge
 
 def main():
-    credentials = {
-        "usernames": {
-            "BarbaraS@vhlaw.co.za": {
-                "email": "BarbaraS@vhlaw.co.za",
-                "name": "BarbaraS@vhlaw.co.za",
-                "password": "$2b$12$p1IcU.icMEClnjgypAEB5unUmYDlr0TvslRtRKfKnFsWal/uO8itq"
-            }
-        }
+    # 1. Build a dictionary for streamlit_authenticator from secrets
+    # st.secrets["credentials"] will look like:
+    # {
+    #   "usernames": {
+    #       "BarbaraS@vhlaw.co.za": {
+    #           "email": "...",
+    #           "name": "...",
+    #           "password": "..."
+    #       },
+    #       ...
+    #   }
+    # }
+    credentials_dict = {
+        "usernames": dict(st.secrets["credentials"]["usernames"])
     }
 
+    # 2. Cookie/session settings
     cookie_name = "dummy_cookie_name"
     cookie_key = "dummy_key"
     expiry_days = 0
 
-    authenticator = stauth.Authenticate(credentials, cookie_name, cookie_key, expiry_days)
+    # 3. Create the authenticator object
+    authenticator = stauth.Authenticate(
+        credentials=credentials_dict,
+        cookie_name=cookie_name,
+        key=cookie_key,
+        expiry_days=expiry_days
+    )
 
-    # Use "main" for the login form to avoid the location error.
+    # 4. Show the login form (old API style, valid if pinned to v0.2.3)
     login_result = authenticator.login("Login", "main")
-    
-    # When the app first loads, login_result may be None.
+
     if login_result is None:
         st.warning("Please enter your username and password.")
         st.stop()
@@ -40,11 +52,9 @@ def main():
         st.stop()
 
     if authentication_status:
-        # Once logged in, show welcome message and logout button in the sidebar.
         st.sidebar.write(f"Welcome, {username}")
         authenticator.logout("Logout", "sidebar")
 
-        # Display your logo on the sidebar
         logo = Image.open('Van-Hulsteyns-Logo-Large.png')
         st.sidebar.image(logo)
 
