@@ -1,0 +1,32 @@
+# File: .streamlit/auth_config.py
+
+import streamlit_authenticator as stauth
+
+# In streamlit-authenticator==0.2.3, the constructor signature is:
+# stauth.Authenticate(credentials, cookie_name, cookie_key, cookie_expiry_days)
+
+def get_authenticator():
+    # 1. Define your credentials
+    credentials = {
+        "usernames": {
+            "BarbaraS@vhlaw.co.za": {
+                "email": "BarbaraS@vhlaw.co.za",
+                "name": "BarbaraS@vhlaw.co.za",
+                "password": "$2b$12$p1IcU.icMEClnjgypAEB5unUmYDlr0TvslRtRKfKnFsWal/uO8itq"
+            }
+        }
+    }
+
+    # 2. Cookie/session settings
+    cookie_name = "dummy_cookie_name"
+    cookie_key = "dummy_key"
+    cookie_expiry_days = 0  # Must be the 4th positional argument in v0.2.3
+
+    # 3. Build and return the authenticator instance
+    authenticator = stauth.Authenticate(
+        credentials,
+        cookie_name,
+        cookie_key,
+        cookie_expiry_days
+    )
+    return authenticator
