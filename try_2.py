@@ -129,7 +129,7 @@ def parse_fields_loan_agreement(text):
         "First Loan Agreement Place of signature": r"First\s+Loan\s+Agreement\s+Place\s+of\s+signature\s*(?:[:\-])?\s*(.+)",
         "First Loan Agreement loan amount": r"2\.1\.?\s+Principal\s+debt.*?R\s?([\d,\.]+)",
         "Interest rate in terms of agreement": r"([\d\.]+\s?%)",
-        "First agreement instalment term": r"2\.10[\.,]?\s*Term[\s\S]*?(\d+)\s*months",
+        "First agreement instalment term": r"2\.11[,\.]?\s*Term\s+Number\s+of\s+monthly\s+repayments.*?(\d+)\s+months",
         "First loan agreement Instalment amount": r"Monthly\s+repayment\s+amount[\s\S]*?R\s*([\d,\.]+)",
         "Second Loan Agreement Date": r"Second\s+Loan\s+Agreement\s+Date\s*(?:[:\-])?\s*(.+)",
         "Second Loan Agreement of signature": r"Second\s+Loan\s+Agreement\s+(?:of|Place\s+of)\s+signature\s*(?:[:\-])?\s*(.+)",
