@@ -15,26 +15,26 @@ import search_and_gen
 import pdf_merge
 
 def main():
-    # # 1. Create the authenticator using our separate file
-    # authenticator = get_authenticator()
+    # 1. Create the authenticator using our separate file
+    authenticator = get_authenticator()
 
-    # # 2. Use the old API call for 0.2.3
-    # login_result = authenticator.login("Login", "main")
+    # 2. Use the old API call for 0.2.3
+    login_result = authenticator.login("Login", "main")
 
-    # # 3. If the user hasn't submitted credentials yet, login_result is None
-    # if login_result is None:
-    #     st.warning("Please enter your username and password.")
-    #     st.stop()
+    # 3. If the user hasn't submitted credentials yet, login_result is None
+    if login_result is None:
+        st.warning("Please enter your username and password.")
+        st.stop()
 
-    # name, authentication_status, username = login_result
+    name, authentication_status, username = login_result
 
-    # if authentication_status is False:
-    #     st.error("Username or password is incorrect.")
-    #     st.stop()
+    if authentication_status is False:
+        st.error("Username or password is incorrect.")
+        st.stop()
 
-    # if authentication_status:
-    #     st.sidebar.write(f"Welcome, {username}")
-    #     authenticator.logout("Logout", "sidebar")
+    if authentication_status:
+        st.sidebar.write(f"Welcome, {username}")
+        authenticator.logout("Logout", "sidebar")
 
         logo = Image.open('Van-Hulsteyns-Logo-Large.png')
         st.sidebar.image(logo)
