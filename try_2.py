@@ -21,8 +21,7 @@ def get_connection():
         dbname=st.secrets["database"]["database"],
         user=st.secrets["database"]["user"],
         password=st.secrets["database"]["password"],
-        sslmode="require",
-        connect_timeout=60
+        sslmode="require"
     )
 def convert_date(date_str):
     """
