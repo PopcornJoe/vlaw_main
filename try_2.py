@@ -125,7 +125,7 @@ def extract_text_from_pdf(pdf_file):
 
 def parse_fields_loan_agreement(text):
     patterns = {
-        "First Loan Agreement Date": r"Signature\s+Signature\s*\n\s*(\d{1,2}\s+[A-Za-z]+\s+\d{4})\s+(\d{1,2}\s+[A-Za-z]+\s+\d{4})",
+        "First Loan Agreement Date":r"(\d{1,2}\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{4})(?=\s*\n\s*Date)",
         "First Loan Agreement Place of signature": r"First\s+Loan\s+Agreement\s+Place\s+of\s+signature\s*(?:[:\-])?\s*(.+)",
         "First Loan Agreement loan amount": r"2\.1\.?\s+Principal\s+debt.*?R\s?([\d,\.]+)",
         "Interest rate in terms of agreement": r"([\d\.]+\s?%)",
