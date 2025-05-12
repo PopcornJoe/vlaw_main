@@ -151,6 +151,8 @@ def parse_fields_certificate_of_balance(text):
         "Statement dates": r"(?i)NAME\s+JNT\s+DATE\s+(?P<statement_date>\d{4}/\d{2}/\d{2})",
         "Arrears Date": r"(?i)at\s+midnight\s+on\s+(?P<date_of_cob>\d{1,2}\s+(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{4})",
         "Arrears Amount": r"(?i)arrear\s+amount.*?R(?P<numeric>\d{1,3}(,\d{3})*\.\d{2})\s*\((?P<words>[^)]+)\)",
+        "Interest rate in terms of COB":
+            r"\brate\b(?:\s+of)?\s*([0-9]+(?:\.[0-9]+)?)\s*%"
         "Date of COB": r"(?i)at\s+midnight\s+on\s+(?P<date_of_cob>\d{1,2}\s+(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{4})",
         "Capital Amount ito COB": r"(?i)amounts\s+to\s+R\s*(?P<amount>\d{1,3}(,\d{3})*\.\d{2})",
         "Date of interest ito COB": r"(?i)from\s+(?P<date_of_interest>\d{1,2}\s+(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{4})",
